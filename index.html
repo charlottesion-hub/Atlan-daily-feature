@@ -1,9 +1,822 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>My Site</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlan Daily — Learn a Feature in 5 min</title>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #22263a;
+      --border: #2e3350;
+      --accent: #5865f2;
+      --accent-light: #7c87f5;
+      --accent-glow: rgba(88, 101, 242, 0.18);
+      --text: #e8eaf6;
+      --text-muted: #8b93b8;
+      --tag-bg: #1e2340;
+      --green: #43c59e;
+      --yellow: #f5c542;
+      --red: #f56565;
+      --radius: 14px;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px 64px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--accent);
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .date-badge {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    .progress-wrap {
+      width: 100%;
+      max-width: 720px;
+      margin-bottom: 28px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 720px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      animation: fadeUp 0.35s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      padding: 28px 32px 22px;
+      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--accent-glow) 0%, transparent 70%);
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .day-pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      background: var(--accent-glow);
+      border: 1px solid rgba(88,101,242,0.35);
+      padding: 3px 10px;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .category-pill {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--tag-bg);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .read-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .card-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+    }
+
+    .card-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .card-body {
+      padding: 28px 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 0.97rem;
+      line-height: 1.75;
+      color: var(--text);
+    }
+
+    .use-case-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+
+    .use-case-block .use-case-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--green);
+      margin-bottom: 8px;
+    }
+
+    .use-case-text {
+      font-size: 0.93rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .takeaways {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .takeaways li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.93rem;
+      line-height: 1.55;
+    }
+
+    .takeaway-dot {
+      width: 7px;
+      height: 7px;
+      min-width: 7px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      margin-top: 6px;
+    }
+
+    .docs-link-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .docs-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--accent-light);
+      text-decoration: none;
+      padding: 10px 18px;
+      border: 1px solid rgba(88,101,242,0.4);
+      border-radius: 9px;
+      background: var(--accent-glow);
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .docs-link:hover {
+      background: rgba(88,101,242,0.28);
+      border-color: rgba(88,101,242,0.7);
+    }
+
+    .docs-link svg { width: 14px; height: 14px; }
+
+    .nav {
+      width: 100%;
+      max-width: 720px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .nav-btn:hover {
+      color: var(--text);
+      border-color: var(--accent);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.3;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .nav-counter {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .index-toggle {
+      width: 100%;
+      max-width: 720px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .index-toggle button {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .index-toggle button:hover { color: var(--text); }
+
+    .index-grid {
+      display: none;
+      width: 100%;
+      max-width: 720px;
+      margin-top: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 10px;
+    }
+
+    .index-grid.open { display: grid; }
+
+    .index-item {
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: border-color 0.2s;
+    }
+
+    .index-item:hover { border-color: var(--accent); }
+    .index-item.active { border-color: var(--accent); color: var(--accent-light); }
+
+    .index-num {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      min-width: 22px;
+    }
+
+    @media (max-width: 500px) {
+      .card-header, .card-body { padding: 20px 18px; }
+      .card-title { font-size: 1.25rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World</h1>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    Atlan Daily
+  </div>
+  <div class="date-badge" id="dateBadge"></div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-meta">
+    <span id="progressLabel">Today's feature</span>
+    <span id="progressCount"></span>
+  </div>
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<div class="card" id="card">
+  <div class="card-header">
+    <div class="card-meta">
+      <span class="day-pill" id="dayPill"></span>
+      <span class="category-pill" id="categoryPill"></span>
+      <span class="read-time" id="readTime"></span>
+    </div>
+    <div class="card-title" id="featureTitle"></div>
+    <div class="card-subtitle" id="featureSubtitle"></div>
+  </div>
+  <div class="card-body">
+    <div>
+      <div class="section-label">What it is</div>
+      <div class="description" id="featureDesc"></div>
+    </div>
+    <div class="use-case-block">
+      <div class="use-case-label">Real-world use case</div>
+      <div class="use-case-text" id="featureUseCase"></div>
+    </div>
+    <div>
+      <div class="section-label">Key takeaways</div>
+      <ul class="takeaways" id="featureTakeaways"></ul>
+    </div>
+    <div class="docs-link-wrap">
+      <a class="docs-link" id="featureDocsLink" href="#" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+        </svg>
+        Read official docs
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn" id="prevBtn" onclick="navigate(-1)">← Previous</button>
+  <span class="nav-counter" id="navCounter"></span>
+  <button class="nav-btn" id="nextBtn" onclick="navigate(1)">Next →</button>
+</div>
+
+<div class="index-toggle">
+  <button onclick="toggleIndex()">Browse all features ↓</button>
+</div>
+
+<div class="index-grid" id="indexGrid"></div>
+
+<script>
+const FEATURES = [
+  {
+    title: "Data Catalog",
+    subtitle: "Your single source of truth for all data assets",
+    category: "Discovery",
+    readTime: "6 min read",
+    description: "Atlan's Data Catalog is a centralized, searchable inventory of all your data assets — tables, columns, dashboards, pipelines, models, and more. It automatically syncs metadata from your connected sources so your team always sees an up-to-date view of what data exists, where it lives, and who owns it.",
+    useCase: "A new data analyst joins your team. Instead of pinging 5 Slack channels asking 'Where's the orders table?', they open Atlan, search 'orders', and immediately see the canonical table, its description, owner, freshness, and even a sample query — all in under 30 seconds.",
+    takeaways: [
+      "Eliminates tribal knowledge by making data self-documenting and discoverable.",
+      "Supports tables, dashboards, ML models, pipelines — not just SQL tables.",
+      "Metadata syncs automatically; no manual spreadsheet maintenance."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/categories/4412134843921-Data-Catalog"
+  },
+  {
+    title: "Data Lineage",
+    subtitle: "Trace data from source to dashboard — and back",
+    category: "Governance",
+    readTime: "7 min read",
+    description: "Lineage in Atlan automatically maps how data flows across your stack — from raw ingestion through transformations to final dashboards and reports. You can visualize upstream dependencies (where data comes from) and downstream impact (what breaks if this changes), at both the asset and column level.",
+    useCase: "Your ETL job fails on the 'revenue_daily' dbt model. Instead of manually auditing dozens of pipelines, you open the lineage graph and instantly see that 3 downstream Tableau dashboards and 1 Looker report depend on it. You proactively notify those teams before they notice the issue.",
+    takeaways: [
+      "Column-level lineage shows exactly which upstream columns feed which downstream ones.",
+      "Impact analysis lets you predict blast radius before making schema changes.",
+      "Works across tools: dbt, Fivetran, Airflow, Spark, and more."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/categories/4412134843921"
+  },
+  {
+    title: "Business Glossary",
+    subtitle: "One definition for every business term, agreed on by everyone",
+    category: "Governance",
+    readTime: "5 min read",
+    description: "The Business Glossary lets you define and manage the official meaning of business terms like 'ARR', 'Active User', or 'Churn Rate'. Each term can be linked directly to the data assets that represent it, bridging the gap between how business stakeholders talk and how data is actually stored.",
+    useCase: "Finance says 'revenue' includes refunds; the data team excludes them. After a painful board meeting discrepancy, both teams co-create a 'Revenue' glossary term in Atlan with an agreed definition and link it to the exact columns in the warehouse. Now there's one version of the truth.",
+    takeaways: [
+      "Glossary terms can be linked to tables, columns, and dashboards — not just documented in isolation.",
+      "Supports a review/approval workflow so terms are officially vetted.",
+      "Makes metrics self-documenting inside the catalog for new team members."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779556560273-Business-Glossary"
+  },
+  {
+    title: "Tags & Classifications",
+    subtitle: "Label sensitive data and govern it at scale",
+    category: "Security",
+    readTime: "5 min read",
+    description: "Tags in Atlan let you classify data assets with custom or built-in labels such as PII, GDPR, Confidential, or any category meaningful to your org. Tags propagate through lineage — so if a source column is tagged PII, every downstream asset derived from it can be automatically flagged too.",
+    useCase: "Your security team needs to know every place that stores email addresses before a GDPR audit. Instead of manually scanning hundreds of tables, they filter the catalog by the 'PII' tag and get a complete, auto-updated list — including columns that were added last week.",
+    takeaways: [
+      "Tags propagate downstream through lineage automatically.",
+      "Can be used to drive masking policies, access controls, and audit reports.",
+      "Works at the asset level (table) and the column level."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779523067921"
+  },
+  {
+    title: "Personas",
+    subtitle: "Tailor the catalog experience for each role in your org",
+    category: "Access & UX",
+    readTime: "5 min read",
+    description: "Personas let you create role-based views of Atlan. A 'Marketing Analyst' persona can be configured to show only marketing-related assets and hide irrelevant engineering tables. Each persona controls which assets, metadata fields, and navigation options are visible — reducing noise for end users.",
+    useCase: "Your marketing team is overwhelmed by the hundreds of raw Snowflake tables visible in the catalog. You create a 'Marketing' persona that surfaces only curated marketing tables and their Looker dashboards. Marketers now open Atlan to find data in under a minute instead of giving up.",
+    takeaways: [
+      "Personas are about UX customization, not just security — they reduce cognitive load.",
+      "Multiple personas can be assigned to a single user.",
+      "Works in combination with Purposes (policies) for full governance."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779571050897"
+  },
+  {
+    title: "Purposes & Data Policies",
+    subtitle: "Control what data can be used for, not just who can see it",
+    category: "Governance",
+    readTime: "6 min read",
+    description: "Purposes in Atlan let you define the intended use of data — e.g., 'Internal Analytics Only', 'No External Sharing'. You can attach masking rules, row-level filters, or access restrictions to a Purpose, and link that Purpose to tagged assets. This shifts governance from 'who sees what' to 'what is data allowed to do'.",
+    useCase: "Your customer email column is classified as PII and assigned the 'Internal Use Only' purpose. When a vendor analyst is onboarded with restricted access, Atlan automatically masks the email column for them — without any manual permission change per table.",
+    takeaways: [
+      "Complements Personas: Personas shape UX, Purposes enforce policy.",
+      "Can apply masking, row filters, or hard blocks based on the Purpose.",
+      "Policy is attached to the data classification, not the user — scales automatically."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779584718353"
+  },
+  {
+    title: "Automated Metadata Crawlers",
+    subtitle: "Keep your catalog always in sync — without manual effort",
+    category: "Discovery",
+    readTime: "5 min read",
+    description: "Atlan's crawlers (connectors) automatically extract metadata from data sources — Snowflake, BigQuery, dbt, Tableau, Airflow, and 150+ others. You schedule a crawl and Atlan keeps asset names, schemas, descriptions, lineage, and usage stats continuously up to date in the catalog.",
+    useCase: "Your data engineering team adds 20 new dbt models every sprint. Instead of manually documenting each one in the catalog, the dbt crawler runs on every CI deployment and automatically populates descriptions, column types, and lineage from the dbt manifest — zero extra work from the team.",
+    takeaways: [
+      "150+ native connectors: warehouses, BI tools, orchestrators, ML platforms.",
+      "Crawls can be scheduled (hourly, daily) or triggered on-demand.",
+      "Brings in not just schema but also usage stats, query history, and lineage."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/categories/4412134843921"
+  },
+  {
+    title: "Ownership & Stewardship",
+    subtitle: "Make someone accountable for every data asset",
+    category: "Governance",
+    readTime: "5 min read",
+    description: "Atlan lets you assign Owners and Stewards to any data asset. Owners are accountable for the data's accuracy and fitness for use; Stewards are responsible for documentation and governance. These roles are visible in the catalog and can be used to route requests, notifications, and approval workflows.",
+    useCase: "A dashboard shows 'N/A' for a key metric. Instead of filing a vague Jira ticket, an analyst opens Atlan, finds the dashboard, and clicks the owner's name to message them directly. The issue is resolved the same day — with full context.",
+    takeaways: [
+      "Ownership is per-asset, not per-table — you can own individual columns or dashboards.",
+      "Atlan can auto-suggest owners based on who queries the asset most.",
+      "Stewards and owners can be individuals or teams."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779545561105"
+  },
+  {
+    title: "Requests & Approval Workflows",
+    subtitle: "A formal, trackable process for data access and changes",
+    category: "Collaboration",
+    readTime: "6 min read",
+    description: "Atlan's Requests feature lets users formally request access to data assets, propose metadata changes (like correcting a description), or ask for new certifications — all from within the catalog. Owners or stewards receive a notification, review the request, and approve or reject it with a comment.",
+    useCase: "A new analyst needs access to GDPR-tagged customer tables. Instead of emailing IT, they open Atlan, click 'Request Access' on the table, and explain their business need. The data owner gets a notification, reviews, and approves — creating an automatic audit trail for compliance.",
+    takeaways: [
+      "Creates an audit trail of who requested access, why, and who approved it.",
+      "Can be used for metadata changes, not just access — great for keeping docs accurate.",
+      "Integrates with Slack and email so approvers don't have to stay in Atlan."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779548093073"
+  },
+  {
+    title: "Column-Level Lineage",
+    subtitle: "See exactly which columns feed which — no guessing",
+    category: "Governance",
+    readTime: "6 min read",
+    description: "Column-level lineage (CLL) goes deeper than table-level lineage by showing exactly how individual columns flow from source to target through SQL transformations. Atlan parses the SQL in your dbt models, Spark jobs, and stored procedures to automatically build this granular map.",
+    useCase: "Your 'net_revenue' column in the reporting layer looks wrong. With CLL, you click on it and trace it back through 4 transformation steps to a raw 'amount' column in Stripe's raw event table — and spot a rounding error in a dbt model along the way. No guesswork.",
+    takeaways: [
+      "Powered by SQL parsing — works with dbt, Snowflake, BigQuery, Redshift, and more.",
+      "Crucial for root cause analysis and impact assessment of schema changes.",
+      "Helps data engineers understand complex transformation chains they didn't write."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779510278545"
+  },
+  {
+    title: "Announcements",
+    subtitle: "Alert your team to critical changes in the catalog",
+    category: "Collaboration",
+    readTime: "4 min read",
+    description: "Announcements in Atlan let owners attach a prominent notice to any data asset — signaling that it's deprecated, in active incident, undergoing migration, or anything else time-sensitive. These appear at the top of the asset page so anyone who finds the asset sees the warning immediately.",
+    useCase: "You're deprecating an old 'orders_v1' table in 30 days and replacing it with 'orders_v2'. You attach a 'Deprecated' announcement to the old table with the migration deadline and a link to the new table. Every team using the old table sees it the next time they open Atlan — without anyone having to chase Slack threads.",
+    takeaways: [
+      "Three types: Information (blue), Warning (yellow), Issue (red).",
+      "Subscribers to the asset receive a notification when an announcement is added.",
+      "Announcements appear in lineage views too, so impact is visible upstream."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779562396177"
+  },
+  {
+    title: "Data Certification",
+    subtitle: "Signal which data assets are production-ready and trusted",
+    category: "Trust",
+    readTime: "5 min read",
+    description: "Certification in Atlan lets data owners or stewards officially mark an asset as 'Verified' (trusted for production use), 'Draft' (still being developed), or 'Deprecated'. This status is prominently displayed in the catalog and can be filtered on, helping consumers quickly find reliable data.",
+    useCase: "Your company has 30 tables named something like 'customer_*'. New analysts don't know which ones are canonical. After a certification drive, the 2 gold-standard customer tables are marked 'Verified' and show a green badge. Analysts filter by 'Verified' and go straight to the right tables.",
+    takeaways: [
+      "Three statuses: Verified, Draft, and Deprecated — each with distinct visual treatment.",
+      "Certification can require an approval flow to prevent premature verification.",
+      "Verified assets surface higher in search results by default."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779556116881"
+  },
+  {
+    title: "dbt Integration",
+    subtitle: "Bring your dbt models, tests, and docs into the catalog automatically",
+    category: "Integrations",
+    readTime: "6 min read",
+    description: "Atlan's dbt integration ingests your dbt project's manifest and run results to populate the catalog with model descriptions, column-level lineage, test results, and documentation from your schema.yml files — automatically, with every dbt run. No duplicate documentation effort required.",
+    useCase: "Your dbt project has hundreds of models, each with descriptions in schema.yml. Instead of re-writing all those descriptions in Atlan, you connect your dbt Cloud account once. Atlan ingests everything — model docs, column descriptions, lineage, and test pass/fail status — and keeps it synced with every CI run.",
+    takeaways: [
+      "Supports dbt Core and dbt Cloud; pulls from the manifest.json artifact.",
+      "dbt test results (pass/fail) are visible on each model's asset page in Atlan.",
+      "Column descriptions from schema.yml are imported and kept in sync."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779461327889"
+  },
+  {
+    title: "Search & Discovery",
+    subtitle: "Find any data asset in seconds, not hours",
+    category: "Discovery",
+    readTime: "5 min read",
+    description: "Atlan's search is built on top of Elasticsearch and understands both technical metadata (column names, table names) and business context (glossary terms, descriptions, tags). It supports full-text, filtered, and faceted search so you can narrow down to exactly the asset you need without knowing its exact technical name.",
+    useCase: "A product manager needs 'weekly active users' data for a board deck. They don't know the table name. They search 'weekly active users' in Atlan and find a Verified dbt model with that term in its description — linked to the 'WAU' glossary term. They share the link directly in the deck. Done.",
+    takeaways: [
+      "Searches across names, descriptions, glossary terms, and custom metadata.",
+      "Filters: asset type, owner, certification status, tags, connection, and more.",
+      "Search results can be bookmarked and shared as links with teammates."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779486891793"
+  },
+  {
+    title: "Custom Metadata",
+    subtitle: "Extend any asset with business-specific fields your team needs",
+    category: "Discovery",
+    readTime: "5 min read",
+    description: "Custom Metadata lets you add your own metadata fields to any asset type — like 'SLA tier', 'Business unit', 'Review date', or 'Retention policy'. These fields are fully searchable and filterable, and can be populated manually or via the API.",
+    useCase: "Your data team needs to track 'SLA tier' (Gold/Silver/Bronze) for every pipeline. Instead of maintaining a separate spreadsheet, they add a 'SLA Tier' custom property to pipeline assets in Atlan. Operations can now filter all Gold-tier pipelines instantly during incidents.",
+    takeaways: [
+      "Supports text, number, date, boolean, user, and multi-select field types.",
+      "Custom metadata is searchable — you can filter the entire catalog by any custom field.",
+      "Can be set in bulk via the Atlan SDK or API for existing assets."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779496862737"
+  },
+  {
+    title: "Insights & Usage Analytics",
+    subtitle: "Understand how your data is actually being used",
+    category: "Discovery",
+    readTime: "5 min read",
+    description: "Atlan's Insights surface query-level usage analytics for your data assets — showing which tables are queried most, who queries them, how often, and recent query history. This helps you identify hot assets, find unused tables to deprecate, and understand real consumption patterns.",
+    useCase: "Before deprecating 'orders_legacy', you check its usage in Atlan. Despite the 'Deprecated' tag you added, Insights shows 3 active users queried it this week. You reach out to them directly with migration instructions — instead of breaking their pipelines silently.",
+    takeaways: [
+      "Usage stats come from query logs ingested from your warehouse (Snowflake, BigQuery, etc.).",
+      "Helps prioritize documentation effort on the most-used assets.",
+      "Can reveal shadow users of sensitive tables — useful for security audits."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779527049873"
+  },
+  {
+    title: "Automations & Playbooks",
+    subtitle: "Automate repetitive governance tasks so you focus on what matters",
+    category: "Governance",
+    readTime: "6 min read",
+    description: "Atlan Automations (Playbooks) let you define event-driven rules that automatically apply metadata, tags, owners, or certifications to assets based on conditions — like 'if a column name contains email, apply PII tag' or 'if a new dbt model is published, assign it to the Analytics team'. Governance at scale without manual work.",
+    useCase: "Your team spends 2 hours every Monday tagging new columns from the weekly Fivetran sync. You create a Playbook: 'for any new column containing email or phone in its name, auto-apply PII tag and send a Slack notification to the privacy team.' Now it happens automatically, every time, with zero manual effort.",
+    takeaways: [
+      "Trigger conditions: asset creation, tag applied, certification change, crawl completion.",
+      "Actions: apply/remove tags, set owners, change certification, run scripts.",
+      "Reduces manual governance overhead dramatically as your data estate grows."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/6330977588369"
+  },
+  {
+    title: "Slack Integration",
+    subtitle: "Govern data without leaving where your team already works",
+    category: "Integrations",
+    readTime: "4 min read",
+    description: "Atlan's Slack integration lets your team interact with the data catalog directly from Slack. You can search for assets, get notified about announcements, receive access request alerts, and share catalog links with rich previews — all without switching context to a separate tool.",
+    useCase: "An engineer pastes a table link in Slack. Instead of a plain URL, Atlan's Slack bot unfurls it into a rich card showing the table's description, owner, certification status, and last updated date. The whole channel gets instant context without anyone having to open a browser.",
+    takeaways: [
+      "Atlan notifications (requests, announcements, mentions) flow into Slack automatically.",
+      "'/atlan search' lets you search the catalog without leaving Slack.",
+      "Link unfurling works for any Atlan asset URL shared in a Slack channel."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779463622801"
+  },
+  {
+    title: "Monte Carlo Integration",
+    subtitle: "Surface data quality incidents directly on your catalog assets",
+    category: "Integrations",
+    readTime: "5 min read",
+    description: "By connecting Monte Carlo to Atlan, data quality incidents detected by Monte Carlo (anomalies, schema changes, freshness issues) automatically appear on the corresponding asset's page in the catalog. This closes the loop between observability and discovery — users see quality health right where they're evaluating data.",
+    useCase: "An analyst opens the 'events' table in Atlan to plan a new analysis. They see a Monte Carlo 'Volume Anomaly' badge on the asset — data volumes dropped 80% yesterday. They avoid building a report on bad data and ping the on-call engineer instead. The integration just saved a bad business decision.",
+    takeaways: [
+      "Monte Carlo incidents are linked to specific Atlan assets automatically.",
+      "Status badges (Healthy / Warning / Incident) display on asset pages in real time.",
+      "Lineage propagates incidents: a bad source table flags its downstream dashboards."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/6154048428305"
+  },
+  {
+    title: "Atlan SDK & APIs",
+    subtitle: "Automate and extend Atlan programmatically",
+    category: "Developer",
+    readTime: "7 min read",
+    description: "Atlan offers a REST API and official SDKs (Python, Java) that let you read and write any metadata in the catalog programmatically. You can bulk-import metadata, automate tagging pipelines, build custom integrations, or embed catalog data into your own internal tools.",
+    useCase: "Your data team writes a Python script using the Atlan SDK that runs in CI: after every dbt Cloud job, it reads the dbt run results and automatically updates the 'last successful run' custom property on each dbt model asset in Atlan. Metadata stays fresh with zero manual work.",
+    takeaways: [
+      "Python SDK: pip install pyatlan — full CRUD on all asset types.",
+      "REST API is fully documented and supports bulk operations for large catalogs.",
+      "Great for bootstrapping metadata from existing sources (spreadsheets, Confluence, JIRA)."
+    ],
+    docsUrl: "https://ask.atlan.com/hc/en-us/articles/5779430699537"
+  }
+];
+
+let currentIndex = 0;
+let indexOpen = false;
+
+function getTodayIndex() {
+  const start = new Date(new Date().getFullYear(), 0, 0);
+  const diff = new Date() - start;
+  const oneDay = 1000 * 60 * 60 * 24;
+  const dayOfYear = Math.floor(diff / oneDay);
+  return dayOfYear % FEATURES.length;
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+}
+
+function render(index) {
+  const f = FEATURES[index];
+  document.getElementById('featureTitle').textContent = f.title;
+  document.getElementById('featureSubtitle').textContent = f.subtitle;
+  document.getElementById('categoryPill').textContent = f.category;
+  document.getElementById('readTime').textContent = f.readTime;
+  document.getElementById('dayPill').textContent = `Feature ${index + 1} of ${FEATURES.length}`;
+  document.getElementById('featureDesc').textContent = f.description;
+  document.getElementById('featureUseCase').textContent = f.useCase;
+  document.getElementById('featureDocsLink').href = f.docsUrl;
+
+  const ul = document.getElementById('featureTakeaways');
+  ul.innerHTML = '';
+  f.takeaways.forEach(t => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span class="takeaway-dot"></span><span>${t}</span>`;
+    ul.appendChild(li);
+  });
+
+  document.getElementById('prevBtn').disabled = index === 0;
+  document.getElementById('nextBtn').disabled = index === FEATURES.length - 1;
+  document.getElementById('navCounter').textContent = `${index + 1} / ${FEATURES.length}`;
+
+  const pct = ((index + 1) / FEATURES.length * 100).toFixed(1);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressCount').textContent = `${index + 1} / ${FEATURES.length} features`;
+
+  document.querySelectorAll('.index-item').forEach((el, i) => {
+    el.classList.toggle('active', i === index);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const card = document.getElementById('card');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = '';
+}
+
+function navigate(dir) {
+  const next = currentIndex + dir;
+  if (next >= 0 && next < FEATURES.length) {
+    currentIndex = next;
+    render(currentIndex);
+  }
+}
+
+function goTo(index) {
+  currentIndex = index;
+  render(currentIndex);
+  if (indexOpen) toggleIndex();
+}
+
+function toggleIndex() {
+  indexOpen = !indexOpen;
+  const grid = document.getElementById('indexGrid');
+  grid.classList.toggle('open', indexOpen);
+  document.querySelector('.index-toggle button').textContent =
+    indexOpen ? 'Hide all features ↑' : 'Browse all features ↓';
+}
+
+function buildIndex() {
+  const grid = document.getElementById('indexGrid');
+  FEATURES.forEach((f, i) => {
+    const el = document.createElement('div');
+    el.className = 'index-item';
+    el.innerHTML = `<span class="index-num">${String(i + 1).padStart(2, '0')}</span><span>${f.title}</span>`;
+    el.onclick = () => goTo(i);
+    grid.appendChild(el);
+  });
+}
+
+document.getElementById('dateBadge').textContent = formatDate(new Date());
+currentIndex = getTodayIndex();
+buildIndex();
+render(currentIndex);
+</script>
 </body>
 </html>
